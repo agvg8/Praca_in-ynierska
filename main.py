@@ -22,11 +22,13 @@ import websockets
 import http.server
 import socketserver
 import threading
+import os
 
 AUTH_TOKEN = 2390
 master_ws = None
 browser_ws = None
 master_authorized = False
+PORT = int(os.environ.get("PORT", 8080))
 
 # --- Serwer HTTP (statyczne pliki) ---
 def start_http_server():
@@ -101,8 +103,9 @@ if __name__ == "__main__":
 
     async def main():
         print("Serwer WebSocket na ws://0.0.0.0:8765")
-        async with websockets.serve(handler, "0.0.0.0", 8765):
+        async with websockets.serve(handler, "0.0.0.0", PORT):
             await asyncio.Future()  # nieskończone oczekiwanie
 
     asyncio.run(main())
+
 
