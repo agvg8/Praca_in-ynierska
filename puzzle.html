@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Puzzle robota</title>
+  <style>
+    html,body{height:100%;margin:0;overflow:hidden;font-family:Arial}
+    #generateButton{height:40px;width:100%;font-size:16px;background:#4CAF50;color:#fff;border:none;cursor:pointer}
+    #blocklyDiv{height:calc(100vh - 40px);width:100vw}
+  </style>
+  <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/msg/pl.js"></script>
+
+</head>
+<body>
+  <button id="generateButton">Generuj</button>
+  <div id="blocklyDiv"></div>
+
+  <xml id="toolbox" style="display:none">
+    <block type="move_forward"></block>
+    <block type="move_backward"></block>
+    <block type="turn_right"></block>
+    <block type="turn_left"></block>
+  </xml>
+
+  <script>
+    // === Definicje bloków ===
+    Blockly.Blocks['move_forward'] = {
+      init: function() {
+        this.appendDummyInput().appendField("Idź do przodu o")
+            .appendField(new Blockly.FieldNumber(1,1), "STEPS")
+            .appendField("kroków");
+        this.setPreviousStatement(true,null);
+        this.setNextStatement(true,null);
+        this.setColour(120);
+      }
+    };
+    Blockly.Blocks['move_backward'] = {
+      init: function() {
+        this.appendDummyInput().appendField("Idź do tyłu o")
+            .appendField(new Blockly.FieldNumber(1,1), "STEPS")
+            .appendField("kroków");
+        this.setPreviousStatement(true,null);
+        this.setNextStatement(true,null);
+        this.setColour(120);
+      }
+    };
+    Blockly.Blocks['turn_right'] = {
+      init: function() {
+        this.appendDummyInput().appendField("Skręć w prawo");
+        this.setPreviousStatement(true,null);
+        this.setNextStatement(true,null);
+        this.setColour(260);
+      }
+    };
+    Blockly.Blocks['turn_left'] = {
+      init: function() {
+        this.appendDummyInput().appendField("Skręć w lewo");
+        this.setPreviousStatement(true,null);
+        this.setNextStatement(true,null);
+        this.setColour(260);
+      }
+    };
+
+    // === Inicjalizacja workspace ===
+    var workspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox') });
+
+    // Generowanie logu
+    function getLogFromBlocks(){
+      var topBlocks = workspace.getTopBlocks(true);
+      var log = "";
+      topBlocks.forEach(function(block){
+        var current = block;
+        while(current){
+          var t = current.type;
+          if(t === 'move_forward'){ log += "Idź do przodu o " + current.getFieldValue('STEPS') + " kroków\n"; }
+          else if(t === 'move_backward'){ log += "Idź do tyłu o " + current.getFieldValue('STEPS') + " kroków\n"; }
+          else if(t === 'turn_right'){ log += "Skręć w prawo\n"; }
+          else if(t === 'turn_left'){ log += "Skręć w lewo\n"; }
+          current = current.getNextBlock();
+        }
+      });
+      return log;
+    }
+
+    function generateLogFile(){
+      var log = getLogFromBlocks();
+      var blob = new Blob([log], { type: 'text/plain' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'log_blokow.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('generateButton').addEventListener('click', generateLogFile);
+  </script>
+
+  <a href="/static" style="position:fixed;left:8px;top:8px;background:#fff;padding:6px;border-radius:6px;text-decoration:none;color:#007bff">◀ Powrót</a>
+</body>
+</html>
+

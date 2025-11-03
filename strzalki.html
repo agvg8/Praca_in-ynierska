@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sterowanie robotem</title>
+<style>
+  body{font-family:Arial;margin:0;padding:20px;background:#f5f7fb}
+  .container{max-width:480px;margin:0 auto;text-align:center}
+  h2{margin-bottom:12px}
+  .btn{width:80px;height:80px;font-size:32px;border:none;border-radius:10px;background:#d9dbe0;cursor:pointer;margin:6px;transition:background .12s}
+  .btn.active{background:#007bff;color:#fff}
+  .row{display:flex;justify-content:center}
+  a.home{display:inline-block;margin-top:18px;color:#007bff;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Sterowanie robotem</h2>
+  <div class="row"><button id="forward" class="btn">↑</button></div>
+  <div class="row">
+    <button id="left" class="btn">←</button>
+    <button id="right" class="btn">→</button>
+  </div>
+  <div class="row"><button id="backward" class="btn">↓</button></div>
+
+  <a class="home" href="/static">◀ Powrót</a>
+</div>
+
+<script>
+function animate(b){
+  b.classList.add('active');
+  setTimeout(()=>b.classList.remove('active'),150);
+}
+function send(dir){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET","/move?dir="+encodeURIComponent(dir),true);
+  xhr.send();
+}
+var up=document.getElementById('forward'),
+    down=document.getElementById('backward'),
+    left=document.getElementById('left'),
+    right=document.getElementById('right');
+
+up.onclick = function(){ animate(up); send('forward'); };
+down.onclick = function(){ animate(down); send('backward'); };
+left.onclick = function(){ animate(left); send('left'); };
+right.onclick = function(){ animate(right); send('right'); };
+
+document.addEventListener('keydown', function(e){
+  var k = e.key;
+  if(k === "ArrowUp" || k === "w" || k === "W"){ animate(up); send('forward'); }
+  else if(k === "ArrowDown" || k === "s" || k === "S"){ animate(down); send('backward'); }
+  else if(k === "ArrowLeft" || k === "a" || k === "A"){ animate(left); send('left'); }
+  else if(k === "ArrowRight" || k === "d" || k === "D"){ animate(right); send('right'); }
+});
+</script>
+</body>
+</html>
+
+

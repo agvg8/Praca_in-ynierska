@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sterowanie - menu</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f5f7fb; display:flex; align-items:center; justify-content:center; height:100vh; }
+    .wrap { width:90%; max-width:480px; text-align:center; }
+    h1 { margin-bottom:18px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .tile {
+      background:white;
+      border-radius:12px;
+      padding:24px;
+      box-shadow: 0 6px 16px rgba(20,30,60,0.08);
+      cursor:pointer;
+      user-select:none;
+      transition:transform .12s, box-shadow .12s;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+    .tile:active { transform:translateY(2px); box-shadow:0 4px 10px rgba(20,30,60,0.06); }
+    .emoji { font-size:40px; margin-bottom:8px; }
+    .title { font-weight:600; font-size:18px; }
+    .subtitle { font-size:12px; color:#666; margin-top:6px; }
+    @media (max-width:420px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Panel robota</h1>
+    <div class="grid">
+      <div class="tile" onclick="location.href='/strzalki.html'">
+        <div class="emoji">🕹</div>
+        <div class="title">Sterowanie</div>
+        <div class="subtitle">Strzałki / WASD</div>
+      </div>
+      <div class="tile" onclick="location.href='/puzzle.html'">
+        <div class="emoji">🧩</div>
+        <div class="title">Puzzle Blockly</div>
+        <div class="subtitle">Twórz sekwencje ruchów</div>
+      </div>
+      <div class="tile" onclick="location.href='/test_serw.html'">
+        <div class="emoji">🎈</div>
+        <div class="title">Test</div>
+        <div class="subtitle">pls działaj</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

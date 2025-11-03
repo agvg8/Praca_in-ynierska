@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Konfiguracja WiFi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #333;
+    }
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 { margin-bottom: 20px; }
+    p { color: #555; }
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      background: #eee;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Status połączenia</h2>
+    <p>Podłącz się do sieci <strong>ESP32_ROBOT</strong>.</p>
+    <div id="status">Oczekiwanie na autoryzację...</div>
+  </div>
+
+  <script>
+    const ws = new WebSocket("ws://" + window.location.hostname + ":8765");
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({role: "browser"}));
+    };
+
+    ws.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.status === "authorized") {
+        document.getElementById("status").textContent = "Zautoryzowano! Przekierowywanie...";
+        setTimeout(() => window.location.href = "menu.html", 1500);
+      } else if (msg.status === "waiting") {
+        document.getElementById("status").textContent = "Oczekiwanie na autoryzację ESP32...";
+      } else if (msg.status === "disconnected") {
+        document.getElementById("status").textContent = "Utracono połączenie z ESP32.";
+      }
+    };
+  </script>
+</body>
+</html>
